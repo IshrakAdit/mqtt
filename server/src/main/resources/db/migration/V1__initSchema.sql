@@ -4,7 +4,7 @@ CREATE TYPE alert_type_enum AS ENUM ('CROP', 'TASK', 'WEATHER');
 -- Create users table
 CREATE TABLE users (
                        id BIGSERIAL PRIMARY KEY,
-                       name VARCHAR(255) NOT NULL
+                       name VARCHAR(255) NOT NULL UNIQUE
 );
 
 -- Create alerts table

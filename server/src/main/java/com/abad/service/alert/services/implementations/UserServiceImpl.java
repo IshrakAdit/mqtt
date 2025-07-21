@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse login(UserRequest request) {
-        User user = userRepository.findById(request.id())
+        User user = userRepository.findByName(request.name())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return mapToResponse(user);
     }

@@ -18,8 +18,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private  String name;
+    @Column(nullable = false, unique = true)
+    private String name;
 
     public User(String name) {
         this.name = name;
