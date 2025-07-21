@@ -22,6 +22,18 @@ public class UserControllerV1 {
         return ResponseEntity.ok("MQTT User service is running successfully");
     }
 
+    @GetMapping("/id/{id}")
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
+        UserResponse response = userService.getUserById(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        List<UserResponse> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@RequestBody UserRequest request) {
         UserResponse response = userService.register(request);
@@ -32,18 +44,6 @@ public class UserControllerV1 {
     public ResponseEntity<UserResponse> login(@RequestBody UserRequest request) {
         UserResponse response = userService.login(request);
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
-        UserResponse response = userService.getUserById(id);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        List<UserResponse> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
     }
 
     @DeleteMapping("/{id}")
