@@ -8,7 +8,11 @@ import com.abad.service.alert.repositories.AlertRepository;
 import com.abad.service.alert.repositories.UserRepository;
 import com.abad.service.alert.services.abstractions.AlertService;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.stereotype.Service;
+
+import org.eclipse.paho.client.mqttv3.MqttClient;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +23,8 @@ public class AlertServiceImpl implements AlertService {
 
     private final AlertRepository alertRepository;
     private final UserRepository userRepository;
+
+    private final MqttClient mqttClient;
 
     @Override
     public AlertResponse createAlert(AlertCreateRequest request) {
@@ -55,6 +61,13 @@ public class AlertServiceImpl implements AlertService {
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void sendNotification(String topic, String message) throws MqttException {
+        MqttMessage mqttMessage = new MqttMessage(message.getBytes());
+        mqttMessage.setQos(1);
+        mqttClient.publish(topic, mqttMessage);
     }
 
     private AlertResponse mapToResponse(Alert alert) {

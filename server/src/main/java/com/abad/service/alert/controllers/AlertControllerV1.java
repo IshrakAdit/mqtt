@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.eclipse.paho.client.mqttv3.MqttException;
+
 import java.util.List;
 
 @RestController
@@ -42,6 +44,18 @@ public class AlertControllerV1 {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         alertService.deleteAlert(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/send")
+    public ResponseEntity<String> sendNotification(@RequestParam String topic,
+                                                   @RequestParam String message) {
+        try {
+            alertService.sendNotification(topic, message);
+            return ResponseEntity.ok("Notification sent to topic: " + topic);
+        } catch (MqttException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to send notification: " + e.getMessage());
+        }
     }
 
 }
