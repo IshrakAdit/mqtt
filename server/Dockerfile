@@ -5,7 +5,7 @@ RUN apk add --no-cache bash maven
 WORKDIR /app
 
 COPY mvnw .
-COPY .mvn .mvn
+COPY .mvn/ .mvn/
 COPY . .
 
 RUN chmod +x mvnw
