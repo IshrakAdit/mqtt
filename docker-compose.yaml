@@ -18,6 +18,8 @@ services:
     ports:
       - "1883:1883"
       - "9001:9001"
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
     networks:
       - app-net
     restart: unless-stopped
@@ -32,7 +34,8 @@ services:
       - mqtt-broker
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      MQTT_BROKER_URL: tcp://mqtt-broker:1883
+      mqtt.broker: ${mqtt.broker}
+      mqtt.clientId: ${mqtt.clientId}
     restart: unless-stopped
     networks:
       - app-net
