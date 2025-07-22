@@ -34,8 +34,8 @@ services:
       - mqtt-broker
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      mqtt.broker: ${mqtt.broker}
-      mqtt.clientId: ${mqtt.clientId}
+      mqtt.broker: ${MQTT_BROKER}
+      mqtt.clientId: ${MQTT_CLIENT_ID}
     restart: unless-stopped
     networks:
       - app-net
