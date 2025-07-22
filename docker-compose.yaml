@@ -13,6 +13,15 @@ services:
     networks:
       - app-net
 
+  mqtt-broker:
+    image: eclipse-mosquitto:2
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    networks:
+      - app-net
+    restart: unless-stopped
+
   alert-service:
     build:
       context: ./server
@@ -20,8 +29,10 @@ services:
       - "8082:8082"
     depends_on:
       - postgres
+      - mqtt-broker
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      MQTT_BROKER_URL: tcp://mqtt-broker:1883
     restart: unless-stopped
     networks:
       - app-net

@@ -8,6 +8,7 @@ import com.abad.service.alert.repositories.AlertRepository;
 import com.abad.service.alert.repositories.UserRepository;
 import com.abad.service.alert.services.abstractions.AlertService;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.stereotype.Service;
@@ -65,9 +66,18 @@ public class AlertServiceImpl implements AlertService {
 
     @Override
     public void sendNotification(String topic, String message) throws MqttException {
+        if (!mqttClient.isConnected()) {
+            MqttConnectOptions options = new MqttConnectOptions();
+            options.setAutomaticReconnect(true);
+            options.setCleanSession(true);
+            mqttClient.connect(options);
+            System.out.println("Connected to MQTT broker.");
+        }
+
         MqttMessage mqttMessage = new MqttMessage(message.getBytes());
-        mqttMessage.setQos(1);
+        mqttMessage.setQos(1); // QoS level 1: at least once
         mqttClient.publish(topic, mqttMessage);
+        System.out.println("📡 Published message to topic: " + topic);
     }
 
     private AlertResponse mapToResponse(Alert alert) {
