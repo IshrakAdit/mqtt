@@ -13,7 +13,7 @@ public class AlertApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		System.out.println("CareSync Data Service");
+		System.out.println("MQTT Notification Service");
 	}
 
 }
