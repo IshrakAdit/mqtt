@@ -6,7 +6,7 @@ services:
       - "5433:5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: mqtt_password
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./init-db:/docker-entrypoint-initdb.d
@@ -33,9 +33,32 @@ services:
       - postgres
       - mqtt-broker
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      mqtt.broker: ${MQTT_BROKER}
-      mqtt.clientId: ${MQTT_CLIENT_ID}
+      POSTGRES_USER: mqtt_user
+      POSTGRES_PASSWORD: mqtt_password
+      mqtt.broker: tcp://mqtt-broker:1883
+      mqtt.clientId: spring-backend
+    restart: unless-stopped
+    networks:
+      - app-net
+
+  user-service:
+    build:
+      context: ./clients/user-dash
+    ports:
+      - "5173:5173"
+    depends_on:
+      - alert-service
+    restart: unless-stopped
+    networks:
+      - app-net
+
+  admin-service:
+    build:
+      context: ./clients/admin-dash
+    ports:
+      - "5174:5174"
+    depends_on:
+      - alert-service
     restart: unless-stopped
     networks:
       - app-net
