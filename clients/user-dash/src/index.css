@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Mobile-first notification app design system */
+
+@layer base {
+  :root {
+    --background: 248 100% 99%;
+    --foreground: 213 27% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 213 27% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 213 27% 20%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 214 32% 91%;
+    --secondary-foreground: 213 27% 20%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 213 100% 97%;
+    --accent-foreground: 217 91% 60%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 217 91% 60%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 98%;
+
+    --notification-unread: 217 91% 60%;
+    --notification-read: 215 16% 47%;
+    
+    /* Mobile-optimized spacing and sizing */
+    --mobile-padding: 1rem;
+    --card-radius: 12px;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 213 27% 8%;
+    --foreground: 210 40% 98%;
+
+    --card: 213 27% 12%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 213 27% 12%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 213 27% 8%;
+
+    --secondary: 213 27% 16%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 213 27% 16%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 213 27% 16%;
+    --accent-foreground: 217 91% 60%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 213 27% 16%;
+    --input: 213 27% 16%;
+    --ring: 217 91% 60%;
+
+    --success: 142 70% 45%;
+    --success-foreground: 0 0% 98%;
+
+    --notification-unread: 217 91% 60%;
+    --notification-read: 215 20% 65%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
