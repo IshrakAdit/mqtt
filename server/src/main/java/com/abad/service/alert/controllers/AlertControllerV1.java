@@ -46,8 +46,8 @@ public class AlertControllerV1 {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/send")
-    public ResponseEntity<String> sendNotification(@RequestParam String topic,
+    @PostMapping("/send/message")
+    public ResponseEntity<String> sendMessageNotification(@RequestParam String topic,
                                                    @RequestParam String message) {
         try {
             alertService.sendNotification(topic, message);
@@ -56,6 +56,12 @@ public class AlertControllerV1 {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to send notification: " + e.getMessage());
         }
+    }
+
+    @PostMapping("/send/alert")
+    public ResponseEntity<AlertResponse> sendAlertNotification(@RequestBody AlertCreateRequest request) {
+        AlertResponse alertResponse = alertService.sendAlert(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(alertResponse);
     }
 
 }

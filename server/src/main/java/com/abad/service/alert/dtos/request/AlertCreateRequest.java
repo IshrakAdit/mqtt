@@ -7,6 +7,7 @@ import lombok.Builder;
 public record AlertCreateRequest(
 
         Long userId,
+        String userName,
         ALERT_TYPE type,
         String description
 
