@@ -78,9 +78,10 @@ public class AlertServiceImpl implements AlertService {
             System.out.println("Connected to MQTT broker.");
         }
 
+        String receiver = "alerts/" + topic;
         MqttMessage mqttMessage = new MqttMessage(message.getBytes());
         mqttMessage.setQos(1); // QoS level 1: at least once
-        mqttClient.publish(topic, mqttMessage);
+        mqttClient.publish(receiver, mqttMessage);
         System.out.println("📡 Published message to topic: " + topic);
     }
 
