@@ -1,5 +1,9 @@
 # MQTT-Protocol
 
+<p align="center">
+  <img src="./assets/images/mqtt-banner.jpeg" alt="MQTT Banner" width="600"/>
+</p>
+
 A **full-stack application** implementing the MQTT protocol for a **real-time, efficient, and light-weight messaging/notification** system.
 
 ## Tech Stack
