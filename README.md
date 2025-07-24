@@ -97,3 +97,5 @@ How it works:
 2. **User Dashboard** subscribes to this topic (`alerts/username`) via MQTT client.
 3. **When a message is published**, the MQTT broker (such as Mosquitto or EMQX) **instantly pushes** the message to all subscribers of that topic.
 4. **No polling is required**, making this extremely efficient for real-time systems with many users.
+
+For any queries, feel free to email me at [ishrak.adit07@gmail.com](mailto:ishrak.adit07@gmail.com) or send a message via [ishrakadit.netlify.app](https://ishrakadit.netlify.app).
