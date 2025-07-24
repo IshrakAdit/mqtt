@@ -1,7 +1,7 @@
 # MQTT-Protocol
 
 <p align="center">
-  <img src="./assets/images/mqtt-banner.jpeg" alt="MQTT Banner" width="600"/>
+  <img src="./assets/images/mqtt-banner.jpg" alt="MQTT Banner" width="600"/>
 </p>
 
 A **full-stack application** implementing the MQTT protocol for a **real-time, efficient, and light-weight messaging/notification** system.
@@ -26,7 +26,7 @@ Follow three simple steps to set up and run the application:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/mttq-protocol.git
+git clone https://github.com/IshrakAdit/mqtt.git
 ```
 
 Or, you can download the zip and extract the files.
