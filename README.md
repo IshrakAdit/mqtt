@@ -1,7 +1,9 @@
 # MQTT-Protocol
 
+## Architecture Diagram
+
 <p align="center">
-  <img src="./assets/images/mqtt-banner.jpg" alt="MQTT Banner" width="600"/>
+  <img src="./assets/images/ArcDiagram.png" alt="MQTT Banner" width="600"/>
 </p>
 
 A **full-stack application** implementing the MQTT protocol for a **real-time, efficient, and light-weight messaging/notification** system.
@@ -50,7 +52,7 @@ This command:
 
 ---
 
-## How to use
+## How To Use
 
 ### Server
 
@@ -91,15 +93,68 @@ Test responses for either of the following endpoints -
 
 ---
 
-## How MQTT Works in This App
+## How It Works
 
-This app uses MQTT (Message Queuing Telemetry Transport), a lightweight publish-subscribe messaging protocol, for real-time messaging/notifications between services and dashboards.
+### Components Overview
 
-How it works:
+| Component               | Role                                                 |
+| ----------------------- | ---------------------------------------------------- |
+| **Spring Boot Backend** | Publishes alerts (as MQTT messages) to topics        |
+| **Mosquitto Broker**    | Routes messages between publishers and subscribers   |
+| **React Frontend**      | Subscribes to topics, receives messages in real-time |
+| **MQTT JS Client**      | Handles WebSocket connection in the frontend         |
+| **MQTT Java Client**    | Publishes messages from backend to broker            |
 
-1. **Admin Dashboard** publishes messages to an MQTT topic corresponding to the `username` (e.g., `alerts/username`).
-2. **User Dashboard** subscribes to this topic (`alerts/username`) via MQTT client.
-3. **When a message is published**, the MQTT broker (such as Mosquitto or EMQX) **instantly pushes** the message to all subscribers of that topic.
-4. **No polling is required**, making this extremely efficient for real-time systems with many users.
+### End-to-End Flow
 
-For any queries, feel free to email me at [ishrak.adit07@gmail.com](mailto:ishrak.adit07@gmail.com) or send a message via [ishrakadit.netlify.app](https://ishrakadit.netlify.app).
+1. **User Dashboard** (React):
+
+   - Connects to MQTT broker via WebSocket (`ws://localhost:9001`)
+   - Subscribes to specific topic corresponding to username
+
+2. **Admin Dashboard** (React):
+
+   - Sends message via HTTP POST to Spring Boot backend
+   - Triggers sending message to specific topic
+
+3. **Spring Boot Backend**:
+
+   - Processes request
+   - Publishes message to specific MQTT topic via TCP (1883)
+
+4. **Mosquitto MQTT Broker**:
+
+   - Receives the message on TCP
+   - Forwards it to all WebSocket subscribers of the topic
+
+5. **User Dashboard**:
+   - Receives message over WebSocket
+   - Parses and displays it in real-time (toast + UI update)
+
+No polling or refresh is needed — it’s a push-based, event-driven architecture.
+
+## Forward Strategy
+
+### MQTT vs WebSockets in Frontend
+
+Although the React frontend uses **MQTT over WebSocket** for browser compatibility, MQTT as a protocol remains inherently lightweight and efficient.
+
+### MQTT over WebSocket vs Raw WebSocket
+
+| Feature                 | MQTT over WebSocket                            | Raw WebSocket                                        |
+| ----------------------- | ---------------------------------------------- | ---------------------------------------------------- |
+| **Communication Model** | Publish-subscribe (pub/sub)                    | Point-to-point (full duplex)                         |
+| **Message Overhead**    | Minimal protocol overhead with small headers   | Variable, no built-in message structure              |
+| **Scalability**         | Easily supports multiple subscribers per topic | Requires custom logic to manage multiple connections |
+| **Reliability**         | Supports QoS levels (0, 1, 2) for delivery     | No native message delivery guarantees                |
+
+### Future Implementation: MQTT over TCP for Mobile
+
+- Next plan is to implement **MQTT over native TCP connections** instead of WebSockets, for mobile applications.
+- This allows leveraging MQTT’s full advantages:
+  - **Lower network overhead**
+  - **Reduced battery consumption**
+
+---
+
+### For any queries, feel free to email me at [ishrak.adit07@gmail.com](mailto:ishrak.adit07@gmail.com) or send a message via [ishrakadit.netlify.app](https://ishrakadit.netlify.app).
