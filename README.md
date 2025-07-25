@@ -3,7 +3,7 @@
 ## Architecture Diagram
 
 <p align="center">
-  <img src="./assets/images/ArcDiagram.png" alt="MQTT Banner" width="600"/>
+  <img src="./assets/images/ArcDiagram.png" alt="MQTT Banner" width="300" height="400"/>
 </p>
 
 A **full-stack application** implementing the MQTT protocol for a **real-time, efficient, and light-weight messaging/notification** system.
