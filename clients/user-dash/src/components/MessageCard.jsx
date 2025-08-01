@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
 
-const NotificationCard = ({ notification }) => {
+const MessageCard = ({ message }) => {
   const formatTime = (timestamp) => {
     const now = new Date();
     const diff = now - timestamp;
@@ -19,23 +19,23 @@ const NotificationCard = ({ notification }) => {
   return (
     <Card
       className={`transition-all ${
-        notification.read ? "opacity-75" : "border-primary/20 bg-accent/30"
+        message.read ? "opacity-75" : "border-primary/20 bg-accent/30"
       }`}
     >
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
           <div
             className={`w-2 h-2 rounded-full mt-2 ${
-              notification.read ? "bg-muted-foreground" : "bg-primary"
+              message.read ? "bg-muted-foreground" : "bg-primary"
             }`}
           />
 
           <div className="flex-1 space-y-2">
             <div className="flex items-start justify-between gap-2">
               <p className="text-sm text-foreground leading-relaxed">
-                {notification.message}
+                {message.message}
               </p>
-              {!notification.read && (
+              {!message.read && (
                 <Badge
                   variant="secondary"
                   className="text-xs whitespace-nowrap"
@@ -48,7 +48,7 @@ const NotificationCard = ({ notification }) => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1 text-xs text-muted-foreground">
                 <Clock className="h-3 w-3" />
-                {formatTime(notification.timestamp)}
+                {formatTime(message.timestamp)}
               </div>
             </div>
           </div>
@@ -58,4 +58,4 @@ const NotificationCard = ({ notification }) => {
   );
 };
 
-export default NotificationCard;
+export default MessageCard;
