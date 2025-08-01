@@ -20,7 +20,7 @@ const Dashboard = () => {
     username: "",
     message: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const [messages, setMessages] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
 
@@ -36,21 +36,24 @@ const Dashboard = () => {
     e.preventDefault();
 
     if (!formData.username.trim() || !formData.message.trim()) {
-      toast.error("Both username and message are required");
+      toast({
+        title: "Error",
+        description: "Both username and message are required",
+      });
       return;
     }
 
-    setIsLoading(true);
+    setIsSending(true);
 
     try {
       await apiService.sendMessage(formData.username, formData.message);
-      toast.success("Message sent successfully!");
+      toast({ title: "Message sent!", description: `To ${formData.username}` });
       setFormData({ username: "", message: "" });
     } catch (error) {
       console.error("Error sending message:", error);
-      toast.error("Network error. Please check your connection.");
+      toast({ title: "Failed", description: "Could not send message" });
     } finally {
-      setIsLoading(false);
+      setIsSending(false);
     }
   };
 
@@ -62,10 +65,16 @@ const Dashboard = () => {
       mqttClient.subscribe(topic, (err) => {
         if (!err) {
           console.log(`Subscribed to ${topic}`);
-          toast.success("MQTT connected and listening");
+          toast({
+            title: "Connected",
+            description: "Real-time messaging enabled",
+          });
         } else {
           console.error("Subscription failed:", err);
-          toast.error("Failed to subscribe to message topic");
+          toast({
+            title: "Subscription Error",
+            description: "Failed to subscribe to message topic",
+          });
         }
       });
     };
@@ -89,13 +98,13 @@ const Dashboard = () => {
     const handleError = (err) => {
       console.error("MQTT error:", err);
       setIsConnected(false);
-      toast.error("MQTT connection error");
+      toast({ title: "MQTT Error", description: "Connection error" });
     };
 
     const handleClose = () => {
       console.warn("MQTT disconnected");
       setIsConnected(false);
-      toast.warning("MQTT disconnected");
+      toast({ title: "MQTT Disconnected", description: "Reconnecting..." });
     };
 
     mqttClient.on("connect", handleConnect);
@@ -194,10 +203,10 @@ const Dashboard = () => {
 
           <Button
             type="submit"
-            disabled={isLoading}
+            disabled={isSending}
             className="w-full h-11 mt-4"
           >
-            {isLoading ? (
+            {isSending ? (
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 Sending...
@@ -218,12 +227,12 @@ const Dashboard = () => {
               <CardContent className="py-8 text-center">
                 <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                 <h3 className="font-medium text-foreground mb-2">
-                  No messages received
+                  No messages yet
                 </h3>
                 <p className="text-sm text-muted-foreground">
                   {isConnected
-                    ? "Waiting for incoming messages..."
-                    : "MQTT is not connected yet"}
+                    ? "You're connected and ready to receive messages"
+                    : "Waiting for MQTT connection..."}
                 </p>
               </CardContent>
             </Card>

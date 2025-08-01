@@ -25,7 +25,7 @@ const MessageCard = ({ message }) => {
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
           <div
-            className={`w-2 h-2 rounded-full mt-2 ${
+            className={`w-2 h-2 rounded-full mt-2 mr-2 ${
               message.read ? "bg-muted-foreground" : "bg-primary"
             }`}
           />
