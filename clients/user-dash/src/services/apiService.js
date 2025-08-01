@@ -2,6 +2,9 @@
 const USER_API_BASE_URL =
   import.meta.env.VITE_USER_API_BASE_URL || "http://localhost:8082/user/v1";
 
+const NOTIFY_API_BASE_URL =
+  import.meta.env.VITE_NOTIFY_API_BASE_URL || "http://localhost:8082/notify/v1";
+
 // Generic API call helper
 const apiCall = async (endpoint, options = {}) => {
   const url = `${USER_API_BASE_URL}${endpoint}`;
@@ -66,5 +69,23 @@ export const authAPI = {
     return await apiCall(`/${id}`, {
       method: "DELETE",
     });
+  },
+};
+
+export const notificationAPI = {
+  async sendMessage(topic, message) {
+    const params = new URLSearchParams({
+      topic: topic.trim(),
+      message: message.trim(),
+    });
+    const response = await fetch(
+      `${NOTIFY_API_BASE_URL}/send/message?${params.toString()}`,
+      {
+        method: "POST",
+      }
+    );
+    if (!response.ok)
+      throw new Error(`Failed to send message: ${response.status}`);
+    return response.text();
   },
 };

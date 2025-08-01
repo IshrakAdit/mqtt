@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Send, LogOut, Bell, BellRing } from "lucide-react";
 import mqttClient from "@/services/mqttService";
 import MessageCard from "./MessageCard";
@@ -14,6 +14,7 @@ import { apiService } from "@/services/apiService";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const username = "admin";
   const [formData, setFormData] = useState({
     username: "",
@@ -54,7 +55,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    const topic = `messages/${username}`;
+    const topic = `alerts/${username}`;
 
     const handleConnect = () => {
       setIsConnected(true);
@@ -70,18 +71,18 @@ const Dashboard = () => {
     };
 
     const handleMessage = (topic, message) => {
-      const sender = topic.split("/")[1] || "unknown";
-      const msgObj = {
+      const fromUser = topic.split("/")[1];
+      const newMsg = {
         id: Date.now() + Math.random(),
-        from: sender,
+        from: fromUser,
         message: message.toString(),
         timestamp: new Date(),
       };
-      setMessages((prev) => [msgObj, ...prev]);
+      setMessages((prev) => [newMsg, ...prev]);
 
       toast({
-        title: `Message from ${sender}`,
-        description: message.toString(),
+        title: "New Message",
+        description: `From ${fromUser}: ${message.toString()}`,
       });
     };
 

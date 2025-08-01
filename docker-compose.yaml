@@ -41,27 +41,27 @@ services:
     networks:
       - app-net
 
-  user-service:
-    build:
-      context: ./clients/user-dash
-    ports:
-      - "5173:5173"
-    depends_on:
-      - alert-service
-    restart: unless-stopped
-    networks:
-      - app-net
+  # user-service:
+  #   build:
+  #     context: ./clients/user-dash
+  #   ports:
+  #     - "5173:5173"
+  #   depends_on:
+  #     - alert-service
+  #   restart: unless-stopped
+  #   networks:
+  #     - app-net
 
-  admin-service:
-    build:
-      context: ./clients/admin-dash
-    ports:
-      - "5174:5174"
-    depends_on:
-      - alert-service
-    restart: unless-stopped
-    networks:
-      - app-net
+  # admin-service:
+  #   build:
+  #     context: ./clients/admin-dash
+  #   ports:
+  #     - "5174:5174"
+  #   depends_on:
+  #     - alert-service
+  #   restart: unless-stopped
+  #   networks:
+  #     - app-net
 
 volumes:
   pgdata:
