@@ -1,20 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
-import { ArrowLeft, Send } from "lucide-react";
+import { ArrowLeft, Send, LogOut, Bell, BellRing } from "lucide-react";
+import mqttClient from "@/services/mqttService";
+import MessageCard from "./MessageCard";
 import { apiService } from "@/services/apiService";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const username = "admin";
   const [formData, setFormData] = useState({
     username: "",
     message: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [isConnected, setIsConnected] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -46,44 +53,133 @@ const Dashboard = () => {
     }
   };
 
+  useEffect(() => {
+    const topic = `messages/${username}`;
+
+    const handleConnect = () => {
+      setIsConnected(true);
+      mqttClient.subscribe(topic, (err) => {
+        if (!err) {
+          console.log(`Subscribed to ${topic}`);
+          toast.success("MQTT connected and listening");
+        } else {
+          console.error("Subscription failed:", err);
+          toast.error("Failed to subscribe to message topic");
+        }
+      });
+    };
+
+    const handleMessage = (topic, message) => {
+      const sender = topic.split("/")[1] || "unknown";
+      const msgObj = {
+        id: Date.now() + Math.random(),
+        from: sender,
+        message: message.toString(),
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [msgObj, ...prev]);
+
+      toast({
+        title: `Message from ${sender}`,
+        description: message.toString(),
+      });
+    };
+
+    const handleError = (err) => {
+      console.error("MQTT error:", err);
+      setIsConnected(false);
+      toast.error("MQTT connection error");
+    };
+
+    const handleClose = () => {
+      console.warn("MQTT disconnected");
+      setIsConnected(false);
+      toast.warning("MQTT disconnected");
+    };
+
+    mqttClient.on("connect", handleConnect);
+    mqttClient.on("message", handleMessage);
+    mqttClient.on("error", handleError);
+    mqttClient.on("close", handleClose);
+
+    if (mqttClient.connected) {
+      handleConnect();
+    }
+
+    return () => {
+      mqttClient.unsubscribe(topic);
+      mqttClient.removeListener("connect", handleConnect);
+      mqttClient.removeListener("message", handleMessage);
+      mqttClient.removeListener("error", handleError);
+      mqttClient.removeListener("close", handleClose);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-lg mx-auto p-6">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <Button
-            variant="ghost"
-            onClick={() => navigate("/")}
-            className="p-2 h-auto"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <h1 className="text-lg font-medium text-foreground">Send Message</h1>
-          <div className="w-8"></div>
-        </div>
+      {/* Header */}
+      <header className="bg-card border-b sticky top-0 z-10">
+        <div className="max-w-lg mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/")}
+              className="h-9 w-9"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <div>
+              <h1 className="font-semibold text-foreground">Admin</h1>
+              <p className="text-sm text-muted-foreground">
+                Username: {username}
+              </p>
+            </div>
+          </div>
 
-        {/* Form */}
+          <div className="flex items-center gap-2">
+            <Badge
+              variant={isConnected ? "default" : "destructive"}
+              className="text-xs"
+            >
+              {isConnected ? "MQTT Connected" : "MQTT Disconnected"}
+            </Badge>
+            <Button variant="ghost" size="sm">
+              <LogOut className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-lg mx-auto p-4 space-y-6">
+        {/* Title Card */}
+        <Card>
+          <CardHeader className="pb-3 items-center">
+            <CardTitle className="flex items-center gap-2">
+              <BellRing className="h-5 w-5 text-primary" />
+              Admin Messaging Dashboard
+            </CardTitle>
+          </CardHeader>
+        </Card>
+
+        {/* Message Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="username" className="text-sm font-medium">
-              Username
-            </Label>
+            <Label htmlFor="username">Send to</Label>
             <Input
               id="username"
               name="username"
-              type="text"
               value={formData.username}
               onChange={handleInputChange}
-              placeholder="Enter username"
-              className="h-11"
+              placeholder="Enter recipient username"
               required
+              className="h-11"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="message" className="text-sm font-medium">
-              Message
-            </Label>
+            <Label htmlFor="message">Message</Label>
             <Textarea
               id="message"
               name="message"
@@ -91,26 +187,50 @@ const Dashboard = () => {
               onChange={handleInputChange}
               placeholder="Enter your message"
               rows={4}
-              className="resize-none"
               required
             />
           </div>
 
-          <Button type="submit" disabled={isLoading} className="w-full h-11">
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-full h-11 mt-4"
+          >
             {isLoading ? (
-              <div className="flex items-center gap-2 mt-4">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 Sending...
               </div>
             ) : (
-              <div className="flex items-center gap-2 mt-4">
+              <div className="flex items-center gap-2">
                 <Send className="h-4 w-4" />
                 Send Message
               </div>
             )}
           </Button>
         </form>
-      </div>
+
+        {/* Message List */}
+        <div className="space-y-3 mt-4">
+          {messages.length === 0 ? (
+            <Card>
+              <CardContent className="py-8 text-center">
+                <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="font-medium text-foreground mb-2">
+                  No messages received
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  {isConnected
+                    ? "Waiting for incoming messages..."
+                    : "MQTT is not connected yet"}
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            messages.map((msg) => <MessageCard key={msg.id} message={msg} />)
+          )}
+        </div>
+      </main>
     </div>
   );
 };
