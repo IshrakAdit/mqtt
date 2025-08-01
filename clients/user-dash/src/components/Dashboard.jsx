@@ -4,9 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Bell, BellRing, LogOut } from "lucide-react";
 import mqttClient from "../services/mqttService";
-import NotificationCard from "./NotificationCard";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "../contexts/UserContext";
+import MessageCard from "./MessageCard";
 
 const Dashboard = () => {
   const [notifications, setNotifications] = useState([]);
@@ -136,10 +136,7 @@ const Dashboard = () => {
             </Card>
           ) : (
             notifications.map((notification) => (
-              <NotificationCard
-                key={notification.id}
-                notification={notification}
-              />
+              <MessageCard key={notification.id} notification={notification} />
             ))
           )}
         </div>
