@@ -22,8 +22,6 @@ Follow these steps to set up and run the application:
 git clone https://github.com/IshrakAdit/mqtt.git
 ```
 
-````
-
 Or, you can download the ZIP and extract it.
 
 ### 2. Move into project directory
@@ -117,11 +115,15 @@ MQTT gives you structure, reliability, and efficiency out of the box — great f
 
 ---
 
-## Future Improvements
+## Forward Strategy
 
-Currently working on native **MQTT over TCP** for mobile — even lower overhead and battery usage.
+- Currently working on native **MQTT over TCP** for mobile — even lower overhead and battery usage.
+- **Persistent alert history** with read/unread states
 
 ---
 
 ### For any queries, feel free to email me at [ishrak.adit07@gmail.com](mailto:ishrak.adit07@gmail.com) or contact me via [ishrakadit.netlify.app](https://ishrakadit.netlify.app).
-````
+
+```
+
+```
