@@ -1,6 +1,6 @@
 # MQTT-Protocol
 
-A full-stack web application using MQTT for fast, lightweight, real-time messaging.
+A full-stack, multi-client web application using MQTT for fast, lightweight, real-time messaging.
 
 ## Tech Stack
 
@@ -63,7 +63,10 @@ Or access the following health-check endpoints:
 - Open: [http://localhost:5173](http://localhost:5173)
 - Register or log in with a **username**
 - You’ll be redirected to a **real-time notification dashboard**
-- You should be connected to the server via MQTT
+- You should be connected to the server via **MQTT**
+- You can open multiple portals with different usernames for simulating **multiple clients**
+- You should be able to send messages to other clients with **username**
+- For Admin, use username **admin**
 
 ---
 
@@ -73,6 +76,7 @@ Or access the following health-check endpoints:
 - No login needed
 - Enter a username and send a message
 - The target user should see the message instantly via MQTT
+- You can open multiple admin portals, that is not checked here (not the purpose of this application)
 
 ---
 
@@ -97,6 +101,9 @@ Or access the following health-check endpoints:
 3. **Backend** publishes message to MQTT broker over TCP
 4. **Mosquitto Broker** forwards message to all clients on the topic
 5. **User Dashboard** receives message instantly — no polling needed
+
+- Works in reverse as User sends message to Admin
+- Works in similar way as User sends message to another user
 
 ---
 
