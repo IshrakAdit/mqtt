@@ -36,7 +36,12 @@ cd mqtt
 docker compose up --build -d
 ```
 
-This builds and launches all services in detached mode.
+This command:
+
+- Builds all services
+- Starts them in detached mode
+
+> **Note:** Since this is a tutorial-level repository and users are responsible for their own running instances, all required secrets to run this project are provided in the project files.
 
 ---
 
@@ -44,7 +49,7 @@ This builds and launches all services in detached mode.
 
 ### Backend Server
 
-Wait 2–3 minutes for the Spring Boot server to initialize.
+After the build, wait 4-5 minutes for the Spring Boot server to initialize.
 Then, you can test the connection using:
 
 ```bash
