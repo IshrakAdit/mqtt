@@ -1,6 +1,6 @@
 # MQTT-Protocol
 
-A full-stack, multi-client web application using MQTT for fast, lightweight, real-time messaging.
+A full-stack, multi-client web application using MQTT for fast, lightweight, real-time, full-duplex messaging.
 
 ## Tech Stack
 
